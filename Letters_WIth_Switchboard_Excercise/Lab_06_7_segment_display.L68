@@ -1,0 +1,247 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 25/09/2020 21:40:38
+
+00000000                             1          *-----------------------------------------------------------
+00000000                             2  * Program    :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7          ORG     $1000
+00001000                             8  START:                          ; first instruction of program
+00001000                             9  *---------------------------------------------------------- 
+00001000                            10  * Display a digit on the 7-segment display 
+00001000                            11  * Pre:  D3.B contains 1 digit to display 
+00001000                            12  *       A2 points to 7-segment LED to use 
+00001000                            13  * Post: A2 points to next 7-segment LED 
+00001000                            14  
+00001000  103C 0020                 15          move.b  #32,d0   trap task to get address of hardware
+00001004  123C 0000                 16          move.b  #0,d1    0 in D1 means display
+00001008  4E4F                      17          trap    #15      display hardware window
+0000100A                            18          
+0000100A  123C 0001                 19          move.b  #1,d1    1 in D1 means get address of 7 segment when trap 32 is run
+0000100E  4E4F                      20          trap    #15      get address of 7-segment display and stores it in D1
+00001010  2841                      21          move.l  d1,a4    A4 = Address of 7-segment display
+00001012                            22          
+00001012                            23  *       move.b  #2,d1    2 in d1 means get address of LEDS
+00001012                            24  *       trap    #15      get address of LEDs
+00001012                            25  *       move.l  d1,a3    A3 = Address of LEDs (we don't use this, this is just as example)
+00001012                            26  
+00001012  244C                      27          move.l a4,a2     Address of 7 segment display needs to be in A2 for segment7 sub routine
+00001014                            28  
+00001014                            29  
+00001014                            30  
+00001014                            31  *------------ identify the characters load them into D3 one at a time and display them one at a time----------
+00001014                            32          
+00001014                            33  
+00001014                            34          
+00001014                            35  *~~ Ask user to hit enter to continue and then put ALArm in 7 Segment etc ~~*
+00001014                            36  
+00001014                            37                  *~~ INSERT CODE HERE ~~*
+00001014                            38                  
+00001014  163C 0013                 39          move.b  #19,d3          place the value from array position 15 (char 0) in D3 and call segment7 subroutine 
+00001018  6100 0114                 40          bsr     segment7
+0000101C                            41          
+0000101C  163C 0012                 42          move.b  #18,d3          12th item which is the char n
+00001020  6100 010C                 43          bsr     segment7
+00001024                            44          
+00001024  163C 000A                 45          move.b  #10,d3          10th item which is the blank char
+00001028  6100 0104                 46          bsr     segment7
+0000102C                            47          
+0000102C  43F9 00001164             48          LEA MESSAGE,A1
+00001032  303C 000E                 49          MOVE.W #14,d0
+00001036                            50  
+00001036  4E4F                      51          TRAP #15  
+00001038  303C 0004                 52          MOVE.W #4,D0
+0000103C  4E4F                      53          TRAP #15
+0000103E                            54          
+0000103E  244C                      55           move.l a4,a2     Address of 7 segment display needs to be in A2 for segment7 sub routine
+00001040                            56  
+00001040                            57                  
+00001040  163C 000C                 58          move.b  #12,d3          16th item which is the char A
+00001044  6100 00E8                 59          bsr     segment7
+00001048                            60          
+00001048  163C 0011                 61          move.b  #17,d3          17th item which is the char L
+0000104C  6100 00E0                 62          bsr     segment7
+00001050                            63          
+00001050  163C 000C                 64          move.b  #12,d3          16th item which is the char A
+00001054  6100 00D8                 65          bsr     segment7
+00001058                            66          
+00001058  163C 0016                 67          move.b  #22,d3          18th item which is the char R
+0000105C  6100 00D0                 68          bsr     segment7
+00001060                            69          
+00001060  163C 0012                 70          move.b  #18,d3          14th item which is the char n
+00001064  6100 00C8                 71          bsr     segment7
+00001068                            72          
+00001068  163C 0012                 73          move.b  #18,d3          14th item which is the char n
+0000106C  6100 00C0                 74          bsr     segment7
+00001070                            75          
+00001070  163C 000A                 76          move.b  #10,d3          10th item which is the char ""
+00001074  6100 00B8                 77          bsr     segment7
+00001078                            78          
+00001078  163C 000A                 79          move.b  #10,d3          10th item which is the char ""
+0000107C  6100 00B0                 80          bsr     segment7
+00001080                            81          
+00001080                            82          
+00001080                            83          
+00001080                            84          
+00001080  43F9 00001164             85          LEA MESSAGE,A1
+00001086  303C 000E                 86          MOVE.W #14,d0
+0000108A                            87  
+0000108A  4E4F                      88          TRAP #15  
+0000108C  303C 0004                 89          MOVE.W #4,D0
+00001090  4E4F                      90          TRAP #15
+00001092                            91  
+00001092  244C                      92          move.l a4,a2     Address of 7 segment display needs to be in A2 for segment7 sub routine
+00001094                            93  
+00001094                            94          
+00001094                            95                  
+00001094  163C 000C                 96          move.b  #12,d3          16th item which is the char A
+00001098  6100 0094                 97          bsr     segment7
+0000109C                            98          
+0000109C  163C 000D                 99          move.b  #13,d3          19th item which is the char C
+000010A0  6100 008C                100          bsr     segment7
+000010A4                           101          
+000010A4  163C 0017                102          move.b  #23,d3          20th item which is the char T
+000010A8  6100 0084                103          bsr     segment7
+000010AC                           104          
+000010AC  163C 0010                105          move.b  #16,d3          18th item which is the char i
+000010B0  6100 007C                106          bsr     segment7
+000010B4                           107          
+000010B4  163C 0018                108          move.b  #24,d3          14th item which is the char v
+000010B8  6100 0074                109          bsr     segment7
+000010BC                           110          
+000010BC  163C 000C                111           move.b #12,d3          16th item which is the char A
+000010C0  6100 006C                112          bsr     segment7
+000010C4                           113          
+000010C4  163C 0017                114         move.b   #23,d3          20th item which is the char T
+000010C8  6100 0064                115          bsr     segment7
+000010CC                           116          
+000010CC  163C 000E                117          move.b  #14,d3          20th item which is the char E
+000010D0  6100 005C                118          bsr     segment7
+000010D4                           119  
+000010D4  43F9 00001164            120                  LEA MESSAGE,A1
+000010DA  303C 000E                121          MOVE.W #14,d0
+000010DE                           122  
+000010DE  4E4F                     123          TRAP #15  
+000010E0  303C 0004                124          MOVE.W #4,D0
+000010E4  4E4F                     125          TRAP #15
+000010E6                           126  
+000010E6  244C                     127          move.l a4,a2     Address of 7 segment display needs to be in A2 for segment7 sub routine
+000010E8                           128   
+000010E8                           129          
+000010E8                           130          
+000010E8  163C 0014                131          move.b  #20,d3          23th item which is the char O
+000010EC  6100 0040                132          bsr     segment7
+000010F0                           133          
+000010F0  163C 0015                134          move.b  #21,d3          24th item which is the char P
+000010F4  6100 0038                135          bsr     segment7
+000010F8                           136          
+000010F8  163C 000E                137          move.b  #14,d3          20th item which is the char E
+000010FC  6100 0030                138          bsr     segment7
+00001100                           139          
+00001100  163C 0012                140          move.b  #18,d3          14th item which is the char n
+00001104  6100 0028                141          bsr     segment7
+00001108                           142          
+00001108  163C 000A                143          move.b  #10,d3          10th item which is the char ""
+0000110C  6100 0020                144          bsr     segment7
+00001110                           145          
+00001110  163C 000A                146          move.b  #10,d3          10th item which is the char ""
+00001114  6100 0018                147          bsr     segment7
+00001118                           148          
+00001118  163C 000A                149          move.b  #10,d3          10th item which is the char ""
+0000111C  6100 0010                150          bsr     segment7
+00001120                           151          
+00001120  163C 000A                152          move.b  #10,d3          10th item which is the char ""
+00001124  6100 0008                153          bsr     segment7
+00001128                           154  
+00001128                           155  
+00001128                           156  
+00001128                           157  
+00001128                           158  *------------ end of display characters 
+00001128                           159  
+00001128  103C 0009                160          MOVE.B  #9,D0
+0000112C  4E4F                     161          TRAP    #15             ; halt simulator
+0000112E                           162  
+0000112E                           163  * Variables and Strings
+0000112E                           164  
+0000112E                           165  segment7: 
+0000112E  48E7 1080                166      movem.l d3/a0,-(a7)     save registers 
+00001132  41F9 0000114A            167      lea digits,a0           starting address of bit pattern array table now in A0 
+00001138  C6BC 000000FF            168      and.l   #$00ff,d3       we force the top 8 bits of D3 to 0 by anding with #$00ff (leave only the byte unchanged)
+0000113E  14B0 3000                169      move.b  (a0,d3),(a2)    display digit by placing in A2 the contents of A0 position value in D3 e.g (digits,pos 12)
+00001142  548A                     170      adda.l  #2,a2           move to next digit in 7-segment display
+00001144  4CDF 0108                171      movem.l (a7)+,d3/a0     restore registers 
+00001148  4E75                     172      rts
+0000114A                           173      
+0000114A                           174      *Note: Adda is used with address registers, which are never byte-size so is extended to 32 bits
+0000114A                           175      *Note: movem moves to or from memory. For more see: http://68k.hax.com/MOVEM
+0000114A                           176      
+0000114A                           177  * bit patterns to form digits on readout 
+0000114A                           178  *----------------------------------------------------------- 
+0000114A                           179  *         A 
+0000114A                           180  *       ----- 
+0000114A                           181  *     F|     |B 
+0000114A                           182  *      |  G  | 
+0000114A                           183  *       ----- 
+0000114A                           184  *     E|     |C 
+0000114A                           185  *      |  D  | 
+0000114A                           186  *       -----   .H 
+0000114A                           187  * 
+0000114A                           188  * Bit Number  128  64 32  16 8 4 2 1
+0000114A                           189  * Segment     H    G  F   E  D C B A 
+0000114A                           190  *
+0000114A                           191  * Total of all is 255 (Hex FF) => 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1
+0000114A                           192  
+0000114A                           193  digits: 
+0000114A= 3F                       194      dc.b  $3F           digit 0 63 in decimal 1+2+4+8+16+32 #0
+0000114B= 06                       195      dc.b  $06           digit 1 #1
+0000114C= 5B                       196      dc.b  $5B           digit 2 #2
+0000114D= 4F                       197      dc.b  $4F           digit 3 #3
+0000114E= 66                       198      dc.b  $66           digit 4 #4
+0000114F= 6D                       199      dc.b  $6D           digit 5 #5
+00001150= 7D                       200      dc.b  $7D           digit 6 #6
+00001151= 07                       201      dc.b  $07           digit 7 #7
+00001152= 7F                       202      dc.b  $7F           digit 8 #8
+00001153= 6F                       203      dc.b  $6F           digit 9 #9
+00001154= 00                       204      dc.b  $00           digit off #10
+00001155= 40                       205      dc.b  $40           dash #11
+00001156                           206      
+00001156                           207      
+00001156= 77                       208      dc.b  $77           letter A decimal value 119 in decimal pos #12 in the array
+00001157= 39                       209      dc.b  $39           letter C decimal value 57 in decimal post #13 in the array
+00001158= 79                       210      dc.b  $79           letter E decimal value 121 in decimal pos #14 in the array
+00001159= 76                       211      dc.b  $76           letter H decimal value 118 in decimal #15
+0000115A= 10                       212      dc.b  $10           letter i decimal value 16 in decimal post #16 in the array
+0000115B= 38                       213      dc.b  $38           letter L decimal value 56 in decimal pos #17 in the array
+0000115C= 54                       214      dc.b  $54           letter n decimal value 84 in decimal #18
+0000115D= 5C                       215      dc.b  $5C           letter o decimal value 92 in decimal pos #19 in the array
+0000115E= 3F                       216      dc.b  $3F           letter O decimal value 191 in decimal post #20 in the array
+0000115F= 73                       217      dc.b  $73           letter P decimal value 243 in decimal post #21 in the array
+00001160= 50                       218      dc.b  $50           letter R decimal value 80 in decimal post #22 in the array
+00001161= 78                       219      dc.b  $78           letter t decimal value 120 in decimal post #23 in the array
+00001162= 1C                       220      dc.b  $1C           letter v decimal value 28 in decimal post #24 in the array
+00001163                           221      
+00001163                           222      
+00001163                           223      
+00001163                           224  
+00001163                           225  
+00001164                           226      ds.w  0             force word boundary always the last element in the array of digits
+00001164                           227  
+00001164                           228  
+00001164= 50 72 65 73 73 20 ...    229  MESSAGE DC.B 'Press enter to continue',0
+0000117C                           230  
+0000117C                           231          END     START           ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+DIGITS              114A
+MESSAGE             1164
+SEGMENT7            112E
+START               1000

@@ -1,0 +1,85 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 25/09/2020 21:34:46
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  
+00001000                            10  * Put program code here
+00001000  43F9 00001064             11      LEA     MESSAGE,A1     ;Loads label MESSAGE into address register A1
+00001006  103C 000E                 12      MOVE.B  #14,D0         ;Moves literal value 14 into register D0
+0000100A  4E4F                      13      TRAP #15               ;Outputs on screen based on value of D0
+0000100C                            14      
+0000100C  43F9 00001087             15      LEA PROMPTNUMERATOR,A1 ;Output a message
+00001012  103C 000E                 16      MOVE.B #14,D0          ;asking the user to enter
+00001016  4E4F                      17      TRAP #15               ;a numerator number
+00001018  303C 0004                 18      MOVE.W #4, D0
+0000101C  4E4F                      19      TRAP #15
+0000101E  3801                      20      MOVE.W D1,D4
+00001020                            21      
+00001020  43F9 000010A4             22      LEA PROMPTDENOMINATOR,A1 ;Outputs but this time a denominator
+00001026  303C 000E                 23      MOVE.W #14,D0
+0000102A  4E4F                      24      TRAP #15
+0000102C  303C 0004                 25      MOVE.W #4, D0
+00001030  4E4F                      26      TRAP #15
+00001032  3601                      27      MOVE.W D1,D3
+00001034                            28      
+00001034  88C3                      29      DIVU D3,D4  ;Divide D3 by D4 and store result in D4
+00001036                            30      
+00001036  43F9 000010C1             31      LEA RESULT1,A1
+0000103C  103C 000E                 32      MOVE.B #14,D0 
+00001040  4E4F                      33      TRAP #15
+00001042  1204                      34      MOVE.B D4,D1    ;Disply result from D4 by moving into D1 and Trap #15
+00001044  103C 0014                 35      MOVE.B #20,D0 ; Trap task 20 outputs
+00001048  4E4F                      36      TRAP #15 ; the number in D1
+0000104A                            37      
+0000104A  43F9 000010D3             38      LEA RESULT2,A1
+00001050  103C 000E                 39      MOVE.B #14,D0
+00001054  4E4F                      40      TRAP #15
+00001056  4844                      41      SWAP D4 ; Swaps the lower to get remainder
+00001058  1204                      42      MOVE.B D4,D1
+0000105A  103C 0014                 43      MOVE.B #20,D0
+0000105E  4E4F                      44      TRAP #15
+00001060                            45  
+00001060                            46  
+00001060                            47  
+00001060                            48      
+00001060                            49      
+00001060                            50      
+00001060                            51      
+00001060                            52   
+00001060  FFFF FFFF                 53      SIMHALT             ; halt simulator
+00001064                            54  
+00001064                            55  * Put variables and constants here
+00001064  =0000000D                 56  CR EQU $0D
+00001064  =0000000A                 57  LF EQU $0A  
+00001064= 57 65 6C 63 6F 6D ...     58  MESSAGE DC.B 'Welcome to the Divide Calculator',CR,LF,0
+00001087= 50 6C 65 61 73 65 ...     59  PROMPTNUMERATOR DC.B 'Please enter a numerator: ',CR,LF,0
+000010A4= 50 6C 65 61 73 65 ...     60  PROMPTDENOMINATOR DC.B 'Please enter a denominator',CR,LF,0
+000010C1= 54 68 65 20 51 75 ...     61  RESULT1 DC.B 'The Quotient is: ',0
+000010D3= 0D 0A 54 68 65 20 ...     62  RESULT2 DC.B CR,LF,'The Remainder is: ',0
+000010E8                            63  
+000010E8                            64  
+000010E8                            65      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CR                  D
+LF                  A
+MESSAGE             1064
+PROMPTDENOMINATOR   10A4
+PROMPTNUMERATOR     1087
+RESULT1             10C1
+RESULT2             10D3
+START               1000

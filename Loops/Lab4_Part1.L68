@@ -1,0 +1,75 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 07/02/2020 23:49:13
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9      
+00001000                            10  * Put program code here
+00001000                            11  
+00001000  307C 2000                 12      MOVE.W #FIRST,A0
+00001004                            13  ; Load the first memmory location 2000
+00001004                            14      
+00001004                            15      REPEAT 
+00001004  43F9 00001044             16      LEA MESSAGE,A1
+0000100A  303C 000E                 17      MOVE.W #14,d0
+0000100E                            18  ;Output message to screen
+0000100E  4E4F                      19      TRAP #15
+00001010                            20      
+00001010  303C 0004                 21      MOVE.W #4,D0
+00001014  4E4F                      22      TRAP #15
+00001016                            23  ;Move data in register D1 to A0 and increment with every loop
+00001016  30C1                      24      MOVE.W D1,(A0)+
+00001018                            25      
+00001018                            26      UNTIL.B D1 <EQ> #0 DO
+0000101E                            27      ;Repeat until D1 is equal to literal value 0
+0000101E                            28      
+0000101E  307C 2000                 29      MOVE.W #FIRST,A0
+00001022                            30      ;Load first memmory location before we enter the loop
+00001022                            31      
+00001022  3218                      32  LOOP MOVE.W (A0)+, D1
+00001024  B27C 0000                 33      CMP.W #0,D1
+00001028  6700 0016                 34      BEQ EXIT
+0000102C                            35  
+0000102C  43F9 0000105D             36      LEA SPACING,A1
+00001032  303C 000E                 37      MOVE.W #14,D0
+00001036  4E4F                      38      TRAP #15
+00001038                            39      
+00001038                            40      ;Keep looping until register D1 is equal to 0, printing each number and spacing it out
+00001038                            41      
+00001038  303C 0014                 42      MOVE.W #20,D0
+0000103C  4E4F                      43      TRAP #15
+0000103E  60E2                      44      BRA LOOP
+00001040                            45      
+00001040  FFFF FFFF                 46  EXIT SIMHALT             ; halt simulator
+00001044                            47  
+00001044                            48  * Put variables and constants here
+00001044  =0000000D                 49  CR EQU $0D
+00001044  =0000000A                 50  LF EQU $0A
+00001044= 0D 0A 45 4E 54 45 ...     51  MESSAGE DC.B CR,LF,'ENTER 0 TO STOP LOOP',CR,LF,0
+0000105D  =00002000                 52  FIRST EQU $2000
+0000105D= 20 00                     53  SPACING DC.B ' ',0
+0000105F                            54      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+CR                  D
+EXIT                1040
+FIRST               2000
+LF                  A
+LOOP                1022
+MESSAGE             1044
+SPACING             105D
+START               1000
+_30000000           1004

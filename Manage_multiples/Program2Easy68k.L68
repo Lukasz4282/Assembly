@@ -1,0 +1,95 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 25/09/2020 21:35:54
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  
+00001000                            10  * Put program code here
+00001000                            11      
+00001000  43F9 0000109C             12      LEA MESSAGE,A1  ;Shows a message for the user to enter a value
+00001006  700E                      13      MOVE.L #14,D0   
+00001008  4E4F                      14      TRAP #15
+0000100A                            15        
+0000100A  7004                      16      MOVE.L #4,D0    ;Stores the value into variable A
+0000100C  4E4F                      17      TRAP #15
+0000100E  23C1 0000108C             18      MOVE.L D1, A
+00001014                            19      
+00001014  43F9 0000109C             20      LEA MESSAGE,A1  
+0000101A  103C 000E                 21      MOVE.B #14,D0
+0000101E  4E4F                      22      TRAP #15
+00001020                            23      
+00001020  7004                      24      MOVE.L #4,D0 ;Stores the value in Variable B etc etc
+00001022  4E4F                      25      TRAP #15
+00001024  23C1 00001090             26      MOVE.L D1, B
+0000102A                            27      
+0000102A  43F9 0000109C             28      LEA MESSAGE,A1  
+00001030  700E                      29      MOVE.L #14,D0
+00001032  4E4F                      30      TRAP #15
+00001034                            31      
+00001034  7004                      32      MOVE.L #4,D0
+00001036  4E4F                      33      TRAP #15
+00001038  23C1 00001094             34      MOVE.L D1, C
+0000103E                            35      
+0000103E  43F9 0000109C             36      LEA MESSAGE,A1  
+00001044  700E                      37      MOVE.L #14,D0
+00001046  4E4F                      38      TRAP #15
+00001048                            39      
+00001048  7004                      40      MOVE.L #4,D0
+0000104A  4E4F                      41      TRAP #15
+0000104C  23C1 00001098             42      MOVE.L D1, D
+00001052                            43      
+00001052  43F9 0000109C             44      LEA MESSAGE,A1  
+00001058  700E                      45      MOVE.L #14,D0
+0000105A  4E4F                      46      TRAP #15
+0000105C                            47      
+0000105C  4245                      48      CLR D5      ;Clears register D5
+0000105E  DAB9 0000108C             49      ADD.L A,D5  ;Adds variable A to register D5
+00001064  DAB9 00001090             50      ADD.L B,D5
+0000106A                            51  
+0000106A  DCB9 00001094             52      ADD.L C,D6  ;Adds variable C to register D6
+00001070  DCB9 00001098             53      ADD.L D,D6
+00001076  CDC5                      54      MULS D5,D6  ;Multiplies register D5 by D6 and stores result in D6
+00001078                            55  
+00001078  43F9 000010B7             56      LEA OUTPUT,A1
+0000107E  700E                      57      MOVE.L #14,D0
+00001080  4E4F                      58      TRAP #15
+00001082  2206                      59      MOVE.L D6,D1    ;Outputs result onto screen
+00001084  7014                      60      MOVE.L #20,D0 ; Trap task 20 outputs
+00001086  4E4F                      61      TRAP #15 ; the number in D1      
+00001088                            62      
+00001088  FFFF FFFF                 63      SIMHALT             ; halt simulator
+0000108C                            64  
+0000108C                            65  * Put variables and constants here
+0000108C  =0000000D                 66  CR EQU $0D
+0000108C  =0000000A                 67  LF EQU $0A  
+0000108C= 00000000                  68  A DC.L 0
+00001090= 00000000                  69  B DC.L 0
+00001094= 00000000                  70  C DC.L 0
+00001098= 00000000                  71  D DC.L 0
+0000109C= 50 6C 65 61 73 65 ...     72  MESSAGE DC.B 'Please enter 4 numbers: ',CR,LF,0
+000010B7= 54 68 65 20 72 65 ...     73  OUTPUT DC.B 'The result is: ',CR,LF,0
+000010C9                            74      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+A                   108C
+B                   1090
+C                   1094
+CR                  D
+D                   1098
+LF                  A
+MESSAGE             109C
+OUTPUT              10B7
+START               1000

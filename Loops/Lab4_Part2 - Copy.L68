@@ -1,0 +1,158 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 05/02/2020 11:42:17
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9      
+00001000                            10  * Put program code here
+00001000                            11  
+00001000  307C 2000                 12      MOVE.W #FIRST,A0
+00001004                            13  ; Load the first memmory location 2000
+00001004                            14      
+00001004                            15      REPEAT 
+00001004  43F9 000010BC             16      LEA MESSAGE,A1
+0000100A  303C 000E                 17      MOVE.W #14,d0
+0000100E                            18  ;Output message to screen
+0000100E  4E4F                      19      TRAP #15
+00001010                            20      
+00001010  303C 0004                 21      MOVE.W #4,D0
+00001014  4E4F                      22      TRAP #15
+00001016                            23  ;Move data in register D1 to A0 and increment with every loop
+00001016  30C1                      24      MOVE.W D1,(A0)+
+00001018                            25      
+00001018                            26      UNTIL.B D1 <EQ> #0 DO
+0000101E                            27      ;Repeat until D1 is equal to literal value 0
+0000101E                            28      
+0000101E  307C 2000                 29      MOVE.W #FIRST,A0
+00001022                            30      ;Load first memmory location before we enter the loop
+00001022                            31      
+00001022  3218                      32  LOOP MOVE.W (A0)+, D1
+00001024  B27C 0000                 33      CMP.W #0,D1
+00001028  6700 0016                 34      BEQ P2
+0000102C                            35  
+0000102C  43F9 00001146             36      LEA SPACING,A1
+00001032  303C 000E                 37      MOVE.W #14,D0
+00001036  4E4F                      38      TRAP #15
+00001038                            39      
+00001038                            40      ;Keep looping until register D1 is equal to 0, printing each number and spacing it out
+00001038                            41      
+00001038  303C 0014                 42      MOVE.W #20,D0
+0000103C  4E4F                      43      TRAP #15
+0000103E  60E2                      44      BRA LOOP
+00001040                            45      
+00001040  43F9 000010D5             46  P2 LEA DECISION,A1
+00001046  303C 000E                 47     MOVE.W #14,D0
+0000104A  4E4F                      48     TRAP #15
+0000104C                            49     
+0000104C  303C 0004                 50     MOVE.W #4,D0
+00001050  4E4F                      51     TRAP #15
+00001052  3801                      52     MOVE.W D1, D4
+00001054                            53     
+00001054  B87C 0001                 54     CMP #1,D4
+00001058  6700 000E                 55     BEQ ADD
+0000105C                            56     
+0000105C  B87C 0002                 57     CMP.W #2,D4
+00001060  6700 002A                 58     BEQ MULTIPLY
+00001064                            59     
+00001064  6000 004A                 60     BRA INVALID
+00001068                            61     
+00001068                            62  ADD 
+00001068  43F9 0000112B             63      LEA ADDING,A1
+0000106E  103C 000E                 64      MOVE.B #14,D0
+00001072  4E4F                      65      TRAP #15
+00001074                            66      
+00001074  307C 2000                 67      MOVE.W #FIRST,A0
+00001078                            68      
+00001078                            69  ADDN
+00001078  3C18                      70      MOVE.W (A0)+, D6
+0000107A  BC7C 0000                 71      CMP.W #0,D6
+0000107E  6700 003C                 72      BEQ FINISH
+00001082                            73  
+00001082  D286                      74      ADD.L D6,D1
+00001084                            75      
+00001084                            76      ;Keep looping until register D1 is equal to 0, printing each number and spacing it out
+00001084                            77      
+00001084  303C 0014                 78      MOVE.W #20,D0
+00001088  4E4F                      79      TRAP #15
+0000108A  60EC                      80      BRA ADDN
+0000108C                            81  
+0000108C                            82  MULTIPLY
+0000108C  43F9 00001136             83      LEA MULTIPLYING,A1
+00001092  103C 000E                 84      MOVE.B #14,D0
+00001096  4E4F                      85      TRAP #15
+00001098                            86      
+00001098  307C 2000                 87      MOVE.W #FIRST,A0
+0000109C                            88      
+0000109C                            89  MULTP
+0000109C  3C18                      90      MOVE.W (A0)+, D6
+0000109E  BC7C 0000                 91      CMP.W #0,D6
+000010A2  6700 0018                 92      BEQ FINISH
+000010A6                            93  
+000010A6  C3C6                      94      MULS D6,D1
+000010A8                            95      
+000010A8                            96      ;Keep looping until register D1 is equal to 0, printing each number and spacing it out
+000010A8                            97      
+000010A8  303C 0014                 98      MOVE.W #20,D0
+000010AC  4E4F                      99      TRAP #15
+000010AE  60EC                     100      BRA MULTP
+000010B0                           101      
+000010B0                           102      
+000010B0                           103  INVALID
+000010B0  43F9 00001110            104      LEA INVALIDINPUT,A1
+000010B6  700E                     105      MOVE.L #14,D0
+000010B8  4E4F                     106      TRAP #15
+000010BA  6084                     107      BRA P2
+000010BC                           108  
+000010BC                           109  FINISH 
+000010BC                           110  
+000010BC                           111  SIMHALT             ; halt simulator
+000010BC                           112  
+000010BC                           113  * Put variables and constants here
+000010BC  =0000000D                114  CR EQU $0D
+000010BC  =0000000A                115  LF EQU $0A
+000010BC= 0D 0A 45 4E 54 45 ...    116  MESSAGE DC.B CR,LF,'ENTER 0 TO STOP LOOP',CR,LF,0
+000010D5= 0D 0A 50 52 45 53 ...    117  DECISION DC.B CR,LF,'PRESS 1 TO ADD, PRESS 2 TO MULTIPLY',CR,LF,0
+000010FD= 0D 0A 54 48 45 20 ...    118  OUTPUT DC.B CR,LF,'THE RESULT IS ',CR,LF,0
+00001110= 0D 0A 49 4E 56 41 ...    119  INVALIDINPUT DC.B CR,LF,'INVALID INPUT, TRY AGAIN',0
+0000112B= 0D 0A 41 44 44 49 ...    120  ADDING DC.B CR,LF,'ADDING',CR,LF,0
+00001136= 0D 0A 4D 55 4C 54 ...    121  MULTIPLYING DC.B CR,LF,'MULTIPLYING',CR,LF,0
+00001146  =00002000                122  FIRST EQU $2000
+00001146= 20 00                    123  SPACING DC.B ' ',0
+00001148                           124  
+00001148                           125      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ADD                 1068
+ADDING              112B
+ADDN                1078
+CR                  D
+DECISION            10D5
+FINISH              10BC
+FIRST               2000
+INVALID             10B0
+INVALIDINPUT        1110
+LF                  A
+LOOP                1022
+MESSAGE             10BC
+MULTIPLY            108C
+MULTIPLYING         1136
+MULTP               109C
+OUTPUT              10FD
+P2                  1040
+SIMHALT             10BC
+SPACING             1146
+START               1000
+_30000000           1004

@@ -1,0 +1,163 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 25/09/2020 21:39:50
+
+00000000                             1                  *----------------------------------------------------------- 
+00000000                             2  * Program    : switchInput.x68 
+00000000                             3  * Written by : Chuck Kelly 
+00000000                             4  * Date       : Jan 22, 2010 
+00000000                             5  * Description: Demonstrate use of toggle switches for user input. 
+00000000                             6  * 
+00000000                             7  * Displays the current state of toggle switches 0 and 1. 
+00000000                             8  *----------------------------------------------------------- 
+00001000                             9          ORG $1000 
+00001000                            10  START:                      ; first instruction of program 
+00001000                            11  
+00001000                            12  * Display hardware window 
+00001000  103C 0020                 13          MOVE.B  #32,D0 
+00001004  123C 0000                 14          MOVE.B  #00,D1 
+00001008  4E4F                      15          TRAP    #15 
+0000100A                            16  
+0000100A                            17  * Use trap task to get address of toggle switches in D1.L 
+0000100A  103C 0020                 18          MOVE.B  #32,D0      ; trap task 32 Hardware/Simulator 
+0000100E  123C 0003                 19          MOVE.B  #3,D1       ; D1.B = 03, Return address of toggle swithces in D1.L 
+00001012  4E4F                      20          TRAP    #15         ; perform task 
+00001014  2041                      21          MOVE.L  D1,A0       ; A0 is pointer to toggle switches 
+00001016                            22  
+00001016                            23  * Read starting state of toggle switches into D2 
+00001016  1410                      24          MOVE.B  (A0),D2 
+00001018  6100 001E                 25          BSR     DISPLAY     ; display switch states (BSR - Branch to SubRoutine)
+0000101C                            26  
+0000101C                            27      WHILE <T> DO.S          ; ***** INFINITE LOOP ***** 
+0000101C                            28          REPEAT 
+0000101C  103C 0017                 29              MOVE.B  #23,D0 
+00001020  7201                      30              MOVE.L  #1,D1       ; delay 1/100 second 
+00001022  4E4F                      31              TRAP    #15 
+00001024  1210                      32              MOVE.B  (A0),D1     ; read switches 
+00001026                            33          UNTIL.B D1 <NE> D2 DO   ; loop until switch changes 
+0000102A  1401                      34          MOVE.B  D1,D2       ; switch data 
+0000102C  6100 000A                 35          BSR     DISPLAY         ; Branch to Subrountine Display
+00001030                            36      ENDW    
+00001032                            37  
+00001032                            38  * Keep here in case infinite loop is removed. 
+00001032  103C 0009                 39          MOVE.B  #9,D0 
+00001036  4E4F                      40          TRAP    #15             ; halt simulator 
+00001038                            41  
+00001038                            42  *------------------------------------------------ 
+00001038                            43  * Display switch states 
+00001038                            44  * Pre: D2.B contains switch data 
+00001038                            45  * Post: Displays switch states 
+00001038                            46  *       D2 unchanged 
+00001038  48E7 C040                 47  DISPLAY MOVEM.L D0/D1/A1,-(SP)  ; save registers (all 3) 
+0000103C  103C 000B                 48          MOVE.B  #11,D0      ; clear screen (3 lines)
+00001040  323C FF00                 49          MOVE.W  #$FF00,D1 
+00001044  4E4F                      50          TRAP    #15 
+00001046                            51          
+00001046                            52          * switch 0
+00001046  43F9 000010F4             53          LEA     SWITCH0,A1  ; message pointer 
+0000104C  103C 000E                 54          MOVE.B  #14,D0 
+00001050  4E4F                      55          TRAP    #15         ; display message
+00001052                            56          
+00001052  0802 0000                 57          BTST    #0,D2       ; test switch 0 state 
+00001056  6700 000C                 58          BEQ     S0_OFF      ; if off
+0000105A                            59          
+0000105A  43F9 0000111C             60          LEA     ON,A1       ; 'ON' message 
+00001060  6000 0008                 61          BRA     S0DISP
+00001064                            62          
+00001064  43F9 00001121             63  S0_OFF  LEA     OFF,A1      ; 'OFF' message
+0000106A                            64  
+0000106A  103C 000E                 65  S0DISP  MOVE.B  #14,D0 
+0000106E  4E4F                      66          TRAP    #15         ; display 'ON' or 'OFF' 
+00001070                            67  
+00001070                            68          * switck 1
+00001070  43F9 000010FE             69          LEA     SWITCH1,A1  ; same for switch1 
+00001076  103C 000E                 70          MOVE.B  #14,D0 
+0000107A  4E4F                      71          TRAP    #15
+0000107C                            72          
+0000107C  0802 0001                 73          BTST    #1,D2 
+00001080  6700 000C                 74          BEQ     S1_OFF
+00001084                            75          
+00001084  43F9 0000111C             76          LEA     ON,A1       ; On message
+0000108A  6000 0008                 77          BRA     S1DISP
+0000108E                            78          
+0000108E  43F9 00001121             79  S1_OFF  LEA     OFF,A1      ; Off message
+00001094                            80  
+00001094  103C 000E                 81  S1DISP  MOVE.B  #14,D0 
+00001098  4E4F                      82          TRAP    #15 
+0000109A                            83          
+0000109A                            84          * switch 2
+0000109A                            85          
+0000109A  43F9 00001108             86          LEA     SWITCH2,A1  
+000010A0  103C 000E                 87          MOVE.B  #14,D0 
+000010A4  4E4F                      88          TRAP    #15
+000010A6                            89          
+000010A6  0802 0002                 90          BTST    #2,D2 
+000010AA  6700 000C                 91          BEQ     S2_OFF
+000010AE                            92          
+000010AE  43F9 0000111C             93          LEA     ON,A1       ; On message
+000010B4  6000 0008                 94          BRA     S2DISP
+000010B8                            95          
+000010B8  43F9 00001121             96  S2_OFF  LEA     OFF,A1      ; Off message
+000010BE                            97  
+000010BE  103C 000E                 98  S2DISP  MOVE.B  #14,D0 
+000010C2  4E4F                      99          TRAP    #15 
+000010C4                           100          
+000010C4                           101          * switch 3
+000010C4                           102          
+000010C4  43F9 00001112            103          LEA     SWITCH3,A1  
+000010CA  103C 000E                104          MOVE.B  #14,D0 
+000010CE  4E4F                     105          TRAP    #15
+000010D0                           106          
+000010D0  0802 0003                107          BTST    #3,D2 
+000010D4  6700 000C                108          BEQ     S3_OFF
+000010D8                           109          
+000010D8  43F9 0000111C            110          LEA     ON,A1       ; On message
+000010DE  6000 0008                111          BRA     S3DISP
+000010E2                           112          
+000010E2  43F9 00001121            113  S3_OFF  LEA     OFF,A1      ; Off message
+000010E8                           114  
+000010E8  103C 000E                115  S3DISP  MOVE.B  #14,D0 
+000010EC  4E4F                     116          TRAP    #15 
+000010EE                           117  
+000010EE                           118          
+000010EE                           119          
+000010EE  4CDF 0203                120          MOVEM.L (SP)+,D0/D1/A1  ; restore registers (all 3)
+000010F2  4E75                     121          RTS                     ; RTS Return from Subroutine
+000010F4                           122  
+000010F4                           123  *------------------------------------------------ 
+000010F4                           124  * Variables and Strings 
+000010F4= 53 57 49 54 43 48 ...    125  SWITCH0 DC.B    'SWITCH 0 ',0 
+000010FE= 53 57 49 54 43 48 ...    126  SWITCH1 DC.B    'SWITCH 1 ',0 
+00001108= 53 57 49 54 43 48 ...    127  SWITCH2 DC.B    'SWITCH 1 ',0 
+00001112= 53 57 49 54 43 48 ...    128  SWITCH3 DC.B    'SWITCH 1 ',0 
+0000111C= 4F 4E 0D 0A 00           129  ON      DC.B    'ON',$D,$A,0 
+00001121= 4F 46 46 0D 0A 00        130  OFF     DC.B    'OFF',$D,$A,0 
+00001127                           131  
+00001127                           132          END       START   ; last line of source 
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+DISPLAY             1038
+OFF                 1121
+ON                  111C
+S0DISP              106A
+S0_OFF              1064
+S1DISP              1094
+S1_OFF              108E
+S2DISP              10BE
+S2_OFF              10B8
+S3DISP              10E8
+S3_OFF              10E2
+START               1000
+SWITCH0             10F4
+SWITCH1             10FE
+SWITCH2             1108
+SWITCH3             1112
+_10000000           101C
+_10000001           1032
+_30000000           101C

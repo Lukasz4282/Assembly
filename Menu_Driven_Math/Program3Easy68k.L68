@@ -1,0 +1,158 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 25/09/2020 21:38:08
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  
+00001000                            10  * Put program code here
+00001000  43F9 000010F8             11      LEA  MESSAGE,A1     
+00001006  103C 000E                 12      MOVE.B  #14,D0          
+0000100A  4E4F                      13      TRAP #15
+0000100C                            14      
+0000100C  43F9 0000111B             15  LOOP  LEA     MESSAGE2,A1    ;Loop label used for returning here
+00001012  103C 000E                 16      MOVE.B  #14,D0          
+00001016  4E4F                      17      TRAP #15
+00001018  303C 0004                 18      MOVE.W #4, D0
+0000101C  4E4F                      19      TRAP #15
+0000101E  3801                      20      MOVE.W D1,D4
+00001020                            21      
+00001020  B83C 0001                 22      CMP.B   #1,D4           ;Compares D4 to 1
+00001024  6D00 00C4                 23      BLT     INVALID         ;BLT branches if D1 is less than 1
+00001028  B83C 0002                 24      CMP.B   #2,D4           ;Compares D1 to 2
+0000102C  6E00 00BC                 25      BGT     INVALID         ;BGT branches if D1 is greater than 2
+00001030                            26      
+00001030                            27      *--Figures out the number--
+00001030  B83C 0001                 28      CMP.B #1,D4     ;Compares literal value 1 to D4
+00001034  6600 0052                 29      BNE TWO         ;If not equal, go to label TWO
+00001038  43F9 00001171             30      LEA INPUT1,A1  
+0000103E  103C 000E                 31      MOVE.B #14,D0
+00001042  4E4F                      32      TRAP #15
+00001044                            33      
+00001044  7004                      34      MOVE.L #4,D0
+00001046  4E4F                      35      TRAP #15        ;Output messages and take inputs
+00001048  2C01                      36      MOVE.L D1, D6
+0000104A                            37      
+0000104A  43F9 00001171             38      LEA INPUT1,A1  
+00001050  700E                      39      MOVE.L #14,D0
+00001052  4E4F                      40      TRAP #15
+00001054                            41        
+00001054  7004                      42      MOVE.L #4,D0
+00001056  4E4F                      43      TRAP #15
+00001058  2E01                      44      MOVE.L D1, D7
+0000105A                            45      
+0000105A                            46      *--Outputs the first digit--
+0000105A  2206                      47      MOVE.L D6,D1
+0000105C  7014                      48      MOVE.L #20,D0 ; Trap task 20 outputs
+0000105E  4E4F                      49      TRAP #15 ; the number in D1 
+00001060                            50      *--Outputs the +--*
+00001060  43F9 000011BF             51      LEA ADDITION,A1
+00001066  700E                      52      MOVE.L #14,D0
+00001068  4E4F                      53      TRAP #15
+0000106A                            54      *--Outputs the second digit--
+0000106A  2207                      55      MOVE.L D7,D1
+0000106C  7014                      56      MOVE.L #20,D0 ; Trap task 20 outputs        ;Done to format nicely
+0000106E  4E4F                      57      TRAP #15 ; the number in D1 
+00001070                            58      *--Outputs the =--*
+00001070  43F9 000011C3             59      LEA EQUALS,A1
+00001076  700E                      60      MOVE.L #14,D0
+00001078  4E4F                      61      TRAP #15
+0000107A                            62      *--Outputs the result--
+0000107A  DE86                      63      ADD.L D6,D7
+0000107C  2207                      64      MOVE.L D7,D1
+0000107E  7014                      65      MOVE.L #20,D0 ; Trap task 20 outputs
+00001080  4E4F                      66      TRAP #15 ; the number in D1
+00001082                            67      
+00001082                            68      
+00001082  4246                      69      CLR D6  ;Clear registers because they will retain their values after looping 
+00001084  4247                      70      CLR D7
+00001086  6084                      71      BRA LOOP
+00001088                            72   
+00001088  B8BC 00000002             73  TWO CMP.L #2,D4 ;Label TWO, Compare literal value 2 to D4
+0000108E  6600 FF7C                 74      BNE LOOP    ;Go to LOOP if theyre not equal
+00001092                            75      
+00001092  43F9 00001198             76      LEA INPUT2,A1
+00001098  103C 000E                 77      MOVE.B #14,D0
+0000109C  4E4F                      78      TRAP #15
+0000109E  303C 0004                 79      MOVE.W #4, D0
+000010A2  4E4F                      80      TRAP #15
+000010A4  3801                      81      MOVE.W D1,D4
+000010A6                            82      
+000010A6  43F9 00001198             83      LEA INPUT2,A1
+000010AC  303C 000E                 84      MOVE.W #14,D0
+000010B0  4E4F                      85      TRAP #15
+000010B2  303C 0004                 86      MOVE.W #4, D0
+000010B6  4E4F                      87      TRAP #15
+000010B8  3601                      88      MOVE.W D1,D3
+000010BA                            89      
+000010BA  88C3                      90      DIVU D3,D4
+000010BC                            91      
+000010BC  43F9 000011CB             92      LEA RESULT1,A1                          ;Stuff from previous program, division
+000010C2  103C 000E                 93      MOVE.B #14,D0   
+000010C6  4E4F                      94      TRAP #15
+000010C8  1204                      95      MOVE.B D4,D1
+000010CA  103C 0014                 96      MOVE.B #20,D0 ; Trap task 20 outputs
+000010CE  4E4F                      97      TRAP #15 ; the number in D1
+000010D0                            98      
+000010D0  43F9 000011DD             99      LEA RESULT2,A1
+000010D6  103C 000E                100      MOVE.B #14,D0
+000010DA  4E4F                     101      TRAP #15
+000010DC  4844                     102      SWAP D4 ; Swaps the lower
+000010DE  1204                     103      MOVE.B D4,D1
+000010E0  103C 0014                104      MOVE.B #20,D0
+000010E4  4E4F                     105      TRAP #15    
+000010E6                           106  
+000010E6  6000 FF24                107      BRA LOOP    ;Go to LOOP regardless
+000010EA                           108  
+000010EA  43F9 00001145            109  INVALID LEA INV,A1  ;Label to display a message that their input is invalid
+000010F0  700E                     110      MOVE.L #14,D0
+000010F2  4E4F                     111      TRAP #15
+000010F4                           112  
+000010F4  FFFF FFFF                113      SIMHALT             ; halt simulator
+000010F8                           114  
+000010F8                           115  * Put variables and constants here
+000010F8  =0000000D                116  CR EQU $0D
+000010F8  =0000000A                117  LF EQU $0A  
+000010F8= 57 65 6C 63 6F 6D ...    118  MESSAGE DC.B 'Welcome to the second calculator',CR,LF,0
+0000111B= 0D 0A 31 2E 20 41 ...    119  MESSAGE2 DC.B CR,LF,'1. Add 2 numbers',CR,LF,'2. Divide 2 numbers',CR,LF,0
+00001145= 49 6E 76 61 6C 69 ...    120  INV DC.B 'Invalid input, please enter a value 1-2 !',CR,LF,0
+00001171= 50 6C 65 61 73 65 ...    121  INPUT1 DC.B 'Please enter a number for addition: ',CR,LF,0
+00001198= 50 6C 65 61 73 65 ...    122  INPUT2 DC.B 'Please enter a number for division: ',CR,LF,0
+000011BF= 20 2B 20 00              123  ADDITION DC.B ' + ',0
+000011C3= 20 3D 20 00              124  EQUALS DC.B ' = ',0
+000011C7= 20 2F 20 00              125  DIV DC.B ' / ',0
+000011CB= 54 68 65 20 51 75 ...    126  RESULT1 DC.B 'The Quotient is: ',0
+000011DD= 0D 0A 54 68 65 20 ...    127  RESULT2 DC.B CR,LF,'The Remainder is: ',0
+000011F2                           128  
+000011F2                           129  
+000011F2                           130      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ADDITION            11BF
+CR                  D
+DIV                 11C7
+EQUALS              11C3
+INPUT1              1171
+INPUT2              1198
+INV                 1145
+INVALID             10EA
+LF                  A
+LOOP                100C
+MESSAGE             10F8
+MESSAGE2            111B
+RESULT1             11CB
+RESULT2             11DD
+START               1000
+TWO                 1088
